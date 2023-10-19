@@ -27,6 +27,7 @@ banned_words = load_banned_words()
 
 intents = discord.Intents.default()
 intents.members = True
+intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 
@@ -41,14 +42,14 @@ async def on_member_join(member):
     await channel.send(f"Salut {member.mention} ! Bienvenue sur le serveur.")
 
 
-@bot.command()
+@bot.command(name="info")
 async def server_info(ctx):
     server = ctx.guild
     total_members = len(server.members)
     online_members = sum(
         member.status == discord.Status.online for member in server.members
     )
-    total_channels = len(server.channels)
+    total_channels = len(server.text_channels) + len(server.vocal_channels)
 
     response = f"Nombre total de membres : {total_members}\nMembres en ligne : {online_members}\nNombre de canaux : {total_channels}"
     await ctx.send(response)
