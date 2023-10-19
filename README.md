@@ -1,1 +1,1 @@
-# dycord-bot
+# discord-bot
