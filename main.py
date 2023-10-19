@@ -7,7 +7,7 @@ CHANNEL_ID = 1164540231484198952
 token = "MTE2NDUyNjI1MTAzODQ3NDMxMA.GqT52w.LBoVE9d-Uu4uzwJfH3HfvVq5zyTxX09B7Sv1EI"
 
 
-def save_banned_words():
+def save_banned_words(banned_words):
     with open("banned_words.json", "w") as json_file:
         json.dump(banned_words, json_file)
 
@@ -18,11 +18,10 @@ def load_banned_words():
             words = json.load(json_file)
             return words
     except FileNotFoundError:
-        save_banned_words()
+        save_banned_words([])
         return []
 
 
-banned_words = []
 banned_words = load_banned_words()
 
 intents = discord.Intents.default()
@@ -67,7 +66,7 @@ async def server_info(ctx):
     await ctx.send(response)
 
 
-@bot.command()
+@bot.command(name="creer_sond")
 async def create_poll(ctx, question, *options):
     poll_embed = discord.Embed(title=question)
     for option in options:
@@ -100,11 +99,11 @@ async def on_message(message):
 
 
 # Commande pour ajouter des mots à la liste de mots interdits (réservée aux modérateurs)
-@bot.command()
+@bot.command(name="add_ban_word")
 async def add_banned_word(ctx, word):
     if ctx.author.guild_permissions.administrator:
         banned_words.append(word)
-        save_banned_words()  # Sauvegarder la liste après modification
+        save_banned_words(banned_words)  # Sauvegarder la liste après modification
         await ctx.send(f"Le mot '{word}' a été ajouté à la liste des mots interdits.")
     else:
         await ctx.send(
@@ -113,23 +112,18 @@ async def add_banned_word(ctx, word):
 
 
 # Commande pour afficher la liste de mots interdits (réservée aux modérateurs)
-@bot.command()
+@bot.command(name="ban_word")
 async def list_banned_words(ctx):
-    if ctx.author.guild_permissions.administrator:
-        await ctx.send("Liste des mots interdits : " + ", ".join(banned_words))
-    else:
-        await ctx.send(
-            "Vous n'avez pas les autorisations nécessaires pour afficher la liste des mots interdits."
-        )
+    await ctx.send("Liste des mots interdits : " + ", ".join(banned_words))
 
 
 # Commande pour supprimer un mot de la liste de mots interdits (réservée aux modérateurs)
-@bot.command()
+@bot.command(name="rm_ban_word")
 async def remove_banned_word(ctx, word):
     if ctx.author.guild_permissions.administrator:
         if word in banned_words:
             banned_words.remove(word)
-            save_banned_words()
+            save_banned_words(banned_words)
             await ctx.send(
                 f"Le mot '{word}' a été supprimé de la liste des mots interdits."
             )
