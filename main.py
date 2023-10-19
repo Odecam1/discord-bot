@@ -33,7 +33,7 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 
 @bot.event
 async def on_ready():
-    print("Le bot est prêt.")
+    print(f"{bot.user} est prêt")
 
 
 @bot.event
@@ -46,12 +46,24 @@ async def on_member_join(member):
 async def server_info(ctx):
     server = ctx.guild
     total_members = len(server.members)
+    total_bots = sum(1 for member in server.members if member.bot)
     online_members = sum(
         member.status == discord.Status.online for member in server.members
     )
-    total_channels = len(server.text_channels) + len(server.vocal_channels)
+    total_channels = len(
+        [
+            channel
+            for channel in server.channels
+            if not isinstance(channel, discord.CategoryChannel)
+        ]
+    )
 
-    response = f"Nombre total de membres : {total_members}\nMembres en ligne : {online_members}\nNombre de canaux : {total_channels}"
+    response = (
+        f"Sur le serveur {server.name} :\n"
+        f":busts_in_silhouette: Nombre de membres : {total_members} (y compris {total_bots} bots)\n"
+        f":hash: Nombre de salons : {total_channels}\n"
+        f":green_circle: Nombre de membres en ligne : {online_members}"
+    )
     await ctx.send(response)
 
 
