@@ -3,20 +3,20 @@ from discord.ext import commands
 import json
 import random
 
-CHANNEL_ID = ""
-token = ""
+CHANNEL_ID = 1164540231484198952
+token = "MTE2NDUyNjI1MTAzODQ3NDMxMA.GF5jfw.ksYC93NeDdvTVoXId0JanMIBWJ9F5ljeX2__rM"
 
 
-def charger_mots_interdits():
+def load_banned_words():
     try:
-        with open("mots_interdits.json", "r") as json_file:
-            mots = json.load(json_file)
-            return mots
+        with open("banned_words.json", "r") as json_file:
+            words = json.load(json_file)
+            return words
     except FileNotFoundError:
-        return ["mot1", "mot2", "mot3"]
+        return ["word1", "word2", "word3"]
 
 
-mots_interdits = charger_mots_interdits()
+banned_words = load_banned_words()
 
 intents = discord.Intents.default()
 intents.members = True
@@ -59,13 +59,13 @@ async def on_message(message):
     if message.author == bot.user:  # Évitez de réagir à vos propres messages
         return
 
-    contenu_message = (
+    message_content = (
         message.content.lower()
     )  # Convertir le message en minuscules pour la correspondance insensible à la casse
 
-    for mot_interdit in mots_interdits:
-        if mot_interdit in contenu_message:
-            await message.delete()  # Supprimer le message s'il contient un mot interdit
+    for banned_word in banned_words:
+        if banned_word in message_content:
+            await message.delete()  # Permet au bot de traiter d'autres commandes
             await message.channel.send(
                 f"{message.author.mention}, veuillez éviter d'utiliser des mots interdits."
             )
@@ -74,18 +74,18 @@ async def on_message(message):
     await bot.process_commands(message)  # Permet au bot de traiter d'autres commandes
 
 
-def sauvegarder_mots_interdits():
-    with open("mots_interdits.json", "w") as json_file:
-        json.dump(mots_interdits, json_file)
+def save_banned_words():
+    with open("banned_words.json", "w") as json_file:
+        json.dump(banned_words, json_file)
 
 
 # Commande pour ajouter des mots à la liste de mots interdits (réservée aux modérateurs)
 @bot.command()
-async def ajouter_mot_interdit(ctx, mot):
+async def add_banned_word(ctx, word):
     if ctx.author.guild_permissions.administrator:
-        mots_interdits.append(mot)
-        sauvegarder_mots_interdits()  # Sauvegarder la liste après modification
-        await ctx.send(f"Le mot '{mot}' a été ajouté à la liste des mots interdits.")
+        banned_words.append(word)
+        save_banned_words()  # Sauvegarder la liste après modification
+        await ctx.send(f"Le mot '{word}' a été ajouté à la liste des mots interdits.")
     else:
         await ctx.send(
             "Vous n'avez pas les autorisations nécessaires pour ajouter un mot interdit."
@@ -94,9 +94,9 @@ async def ajouter_mot_interdit(ctx, mot):
 
 # Commande pour afficher la liste de mots interdits (réservée aux modérateurs)
 @bot.command()
-async def liste_mots_interdits(ctx):
+async def list_banned_words(ctx):
     if ctx.author.guild_permissions.administrator:
-        await ctx.send("Liste des mots interdits : " + ", ".join(mots_interdits))
+        await ctx.send("Liste des mots interdits : " + ", ".join(banned_words))
     else:
         await ctx.send(
             "Vous n'avez pas les autorisations nécessaires pour afficher la liste des mots interdits."
@@ -105,11 +105,11 @@ async def liste_mots_interdits(ctx):
 
 # Commande pour supprimer un mot de la liste de mots interdits (réservée aux modérateurs)
 @bot.command()
-async def supprimer_mot_interdit(ctx, word):
+async def remove_banned_word(ctx, word):
     if ctx.author.guild_permissions.administrator:
-        if word in mots_interdits:
-            mots_interdits.remove(word)
-            sauvegarder_mots_interdits()
+        if word in banned_words:
+            banned_words.remove(word)
+            save_banned_words()
             await ctx.send(
                 f"Le mot '{word}' a été supprimé de la liste des mots interdits."
             )
