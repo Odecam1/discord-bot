@@ -1,7 +1,7 @@
 import discord
 import random
 
-CHANNEL_ID = ""
+CHANNEL_ID = "oiuytr"
 
 intents = discord.Intents.default()
 intents.members = True
