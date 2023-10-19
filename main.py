@@ -7,15 +7,22 @@ CHANNEL_ID = 1164540231484198952
 token = "MTE2NDUyNjI1MTAzODQ3NDMxMA.GqT52w.LBoVE9d-Uu4uzwJfH3HfvVq5zyTxX09B7Sv1EI"
 
 
+def save_banned_words():
+    with open("banned_words.json", "w") as json_file:
+        json.dump(banned_words, json_file)
+
+
 def load_banned_words():
     try:
         with open("banned_words.json", "r") as json_file:
             words = json.load(json_file)
             return words
     except FileNotFoundError:
-        return ["word1", "word2", "word3"]
+        save_banned_words()
+        return []
 
 
+banned_words = []
 banned_words = load_banned_words()
 
 intents = discord.Intents.default()
@@ -77,11 +84,6 @@ async def on_message(message):
             break
 
     await bot.process_commands(message)  # Permet au bot de traiter d'autres commandes
-
-
-def save_banned_words():
-    with open("banned_words.json", "w") as json_file:
-        json.dump(banned_words, json_file)
 
 
 # Commande pour ajouter des mots à la liste de mots interdits (réservée aux modérateurs)
