@@ -1,7 +1,6 @@
 import discord
 from discord.ext import commands
 import json
-import random
 
 CHANNEL_ID = 1164540231484198952
 token = "MTE2NDUyNjI1MTAzODQ3NDMxMA.GqT52w.LBoVE9d-Uu4uzwJfH3HfvVq5zyTxX09B7Sv1EI"
@@ -41,7 +40,7 @@ async def on_member_join(member):
     await channel.send(f"Salut {member.mention} ! Bienvenue sur le serveur.")
 
 
-@bot.command(name="info")
+@bot.command(name="stats")
 async def server_info(ctx):
     server = ctx.guild
     total_members = len(server.members)
@@ -66,7 +65,7 @@ async def server_info(ctx):
     await ctx.send(response)
 
 
-@bot.command(name="creer_sond")
+@bot.command(name="créer_sond")
 async def create_poll(ctx, question, *options):
     poll_embed = discord.Embed(title=question)
     for option in options:
@@ -112,7 +111,7 @@ async def add_banned_word(ctx, word):
 
 
 # Commande pour afficher la liste de mots interdits (réservée aux modérateurs)
-@bot.command(name="ban_word")
+@bot.command(name="mots_ban")
 async def list_banned_words(ctx):
     await ctx.send("Liste des mots interdits : " + ", ".join(banned_words))
 
