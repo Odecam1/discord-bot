@@ -8,8 +8,9 @@ intents.members = True
 bot = discord.ext.commands.Bot(command_prefix="!", intents=intents)
 
 
+@bot.event
 async def on_member_join(member):
-    channel = bot.get_channel(CHANNEL_ID)
+    channel = bot.get_channel(YOUR_WELCOME_CHANNEL_ID)
     await channel.send(f"Salut {member.mention} ! Bienvenue sur le serveur.")
 
 
