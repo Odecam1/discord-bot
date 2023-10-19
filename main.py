@@ -121,3 +121,6 @@ async def remove_banned_word(ctx, word):
         await ctx.send(
             "Vous n'avez pas les autorisations nécessaires pour supprimer un mot interdit."
         )
+
+
+bot.run(token)
