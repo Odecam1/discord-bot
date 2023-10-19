@@ -4,7 +4,7 @@ import json
 import random
 
 CHANNEL_ID = 1164540231484198952
-token = "MTE2NDUyNjI1MTAzODQ3NDMxMA.GF5jfw.ksYC93NeDdvTVoXId0JanMIBWJ9F5ljeX2__rM"
+token = "MTE2NDUyNjI1MTAzODQ3NDMxMA.GqT52w.LBoVE9d-Uu4uzwJfH3HfvVq5zyTxX09B7Sv1EI"
 
 
 def load_banned_words():
@@ -21,6 +21,11 @@ banned_words = load_banned_words()
 intents = discord.Intents.default()
 intents.members = True
 bot = commands.Bot(command_prefix="!", intents=intents)
+
+
+@bot.event
+async def on_ready():
+    print("Le bot est prêt.")
 
 
 @bot.event
