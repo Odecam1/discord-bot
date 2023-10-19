@@ -98,7 +98,7 @@ async def create_poll(ctx, question, *options):
 
 
 # Commande pour ajouter des mots à la liste de mots interdits (réservée aux modérateurs)
-@bot.command(name="add_ban_word")
+@bot.command(name="ajouter_mot_interdit")
 async def add_banned_word(ctx, word):
     if ctx.author.guild_permissions.administrator:
         banned_words.append(word)
@@ -111,13 +111,13 @@ async def add_banned_word(ctx, word):
 
 
 # Commande pour afficher la liste de mots interdits
-@bot.command(name="mots_ban")
+@bot.command(name="liste_mots_interdits")
 async def list_banned_words(ctx):
     await ctx.send("Liste des mots interdits : " + ", ".join(banned_words))
 
 
 # Commande pour supprimer un mot de la liste de mots interdits (réservée aux modérateurs)
-@bot.command(name="rm_ban_word")
+@bot.command(name="supprimer_mot_interdit")
 async def remove_banned_word(ctx, word):
     if ctx.author.guild_permissions.administrator:
         if word in banned_words:
@@ -133,6 +133,17 @@ async def remove_banned_word(ctx, word):
     else:
         await ctx.send(
             "Vous n'avez pas les autorisations nécessaires pour supprimer un mot interdit."
+        )
+
+
+@bot.command(name="bannisement_membre")
+async def ban_user(ctx, user: discord.Member, *, reason="Aucune raison spécifiée"):
+    if ctx.author.guild_permissions.administrator:
+        await user.ban(reason=reason)
+        await ctx.send(f"{user.mention} a été banni pour la raison suivante : {reason}")
+    else:
+        await ctx.send(
+            "Vous n'avez pas les autorisations nécessaires pour bannir un utilisateur."
         )
 
 
