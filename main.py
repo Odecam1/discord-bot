@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import json
 
-CHANNEL_ID = 1164540231484198952
+channel_id = 1164540231484198952
 token = "MTE2NDUyNjI1MTAzODQ3NDMxMA.GqT52w.LBoVE9d-Uu4uzwJfH3HfvVq5zyTxX09B7Sv1EI"
 
 
@@ -36,8 +36,28 @@ async def on_ready():
 
 @bot.event
 async def on_member_join(member):
-    channel = bot.get_channel(CHANNEL_ID)
+    channel = bot.get_channel(channel_id)
     await channel.send(f"Salut {member.mention} ! Bienvenue sur le serveur.")
+
+
+@bot.event
+async def on_message(message):
+    if message.author == bot.user:  # Évitez de réagir à vos propres messages
+        return
+
+    message_content = (
+        message.content.lower()
+    )  # Convertir le message en minuscules pour la correspondance insensible à la casse
+
+    for banned_word in banned_words:
+        if banned_word in message_content:
+            await message.delete()  # Supprimer le message s'il contient un mot interdit
+            await message.channel.send(
+                f"{message.author.mention}, veuillez éviter d'utiliser des mots interdits."
+            )
+            break
+
+    await bot.process_commands(message)  # Permet au bot de traiter d'autres commandes
 
 
 @bot.command(name="stats")
@@ -77,26 +97,6 @@ async def create_poll(ctx, question, *options):
         await poll_message.add_reaction(f"{i+1}\u20e3")
 
 
-@bot.event
-async def on_message(message):
-    if message.author == bot.user:  # Évitez de réagir à vos propres messages
-        return
-
-    message_content = (
-        message.content.lower()
-    )  # Convertir le message en minuscules pour la correspondance insensible à la casse
-
-    for banned_word in banned_words:
-        if banned_word in message_content:
-            await message.delete()  # Permet au bot de traiter d'autres commandes
-            await message.channel.send(
-                f"{message.author.mention}, veuillez éviter d'utiliser des mots interdits."
-            )
-            break
-
-    await bot.process_commands(message)  # Permet au bot de traiter d'autres commandes
-
-
 # Commande pour ajouter des mots à la liste de mots interdits (réservée aux modérateurs)
 @bot.command(name="add_ban_word")
 async def add_banned_word(ctx, word):
@@ -110,7 +110,7 @@ async def add_banned_word(ctx, word):
         )
 
 
-# Commande pour afficher la liste de mots interdits (réservée aux modérateurs)
+# Commande pour afficher la liste de mots interdits
 @bot.command(name="mots_ban")
 async def list_banned_words(ctx):
     await ctx.send("Liste des mots interdits : " + ", ".join(banned_words))
