@@ -1,3 +1,4 @@
+from tabnanny import check
 from discord.ext import commands
 from util.json_ban_word import save_banned_words, banned_words
 
@@ -68,3 +69,17 @@ async def remove_banned_word(ctx, *words):
         await ctx.send(
             "Vous n'avez pas les autorisations nécessaires pour supprimer un mot interdit."
         )
+
+
+async def check_banned_word(message):
+    message_content = (
+        message.content.lower()
+    )  # Convertir le message en minuscules pour la correspondance insensible à la casse
+
+    for banned_word in banned_words:
+        if banned_word in message_content:
+            await message.delete()  # Supprimer le message s'il contient un mot interdit
+            await message.channel.send(
+                f"{message.author.mention}, veuillez éviter d'utiliser des mots interdits."
+            )
+            break
