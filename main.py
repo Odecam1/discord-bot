@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import json
 
-channel_id = 1164540231484198952
+channel_id_member_join = 1164540231484198952
 token = "MTE2NDUyNjI1MTAzODQ3NDMxMA.GqT52w.LBoVE9d-Uu4uzwJfH3HfvVq5zyTxX09B7Sv1EI"
 
 intents = discord.Intents.default()
@@ -37,7 +37,7 @@ async def on_ready():
 
 @bot.event
 async def on_member_join(member):
-    channel = bot.get_channel(channel_id)
+    channel = bot.get_channel(channel_id_member_join)
     await channel.send(f"Salut {member.mention} ! Bienvenue sur le serveur.")
 
 
