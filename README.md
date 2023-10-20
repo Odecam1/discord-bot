@@ -26,8 +26,8 @@ Il s'agit d'un bot Discord multifonctionnel qui offre diverses fonctionnalités 
 ## Commandes
 
 - `!stats` : Obtenez des statistiques sur le serveur.
-- `!créer_sond` : Créez un sondage. Utilisation : `!créer_sond "Question" Option1 Option2 ...`
-- `!ajouter_mot_interdit` : Ajoutez un mot interdit à la liste (réservé aux modérateurs). Utilisation : `!ajouter_mot_interdit mot`
+- `!sondage` : Créez un sondage. Utilisation : `!sondage "Question" Option1 Option2 ...`
+- `!ajouter_mot_interdit` : Ajoutez un mot interdit à la liste (réservé aux modérateurs). Utilisation : `!ajouter_mot_interdit mot1 mot2 ...`
 - `!liste_mots_interdits` : Liste tous les mots interdits.
-- `!supprimer_mot_interdit` : Supprime un mot interdit de la liste (réservé aux modérateurs). Utilisation : `!supprimer_mot_interdit mot`
+- `!supprimer_mot_interdit` : Supprime un mot interdit de la liste (réservé aux modérateurs). Utilisation : `!supprimer_mot_interdit mot1 mot2 ...`
 - `!bannisement_membre` : Bannis un membre. Utilisation : `!bannisement_membre membre`

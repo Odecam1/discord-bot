@@ -86,7 +86,7 @@ async def server_info(ctx):
     await ctx.send(response)
 
 
-@bot.command(name="créer_sond")
+@bot.command(name="sondage")
 async def create_poll(ctx, question, *options):
     poll_embed = discord.Embed(title=question)
     for option in options:
