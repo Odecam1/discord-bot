@@ -11,6 +11,7 @@ from util.clean import clear
 from util.poll import create_poll
 from util.ban_members import ban_user
 
+
 channel_id_member_join = 1164540231484198952
 token = "MTE2NDUyNjI1MTAzODQ3NDMxMA.GqT52w.LBoVE9d-Uu4uzwJfH3HfvVq5zyTxX09B7Sv1EI"
 
