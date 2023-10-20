@@ -61,6 +61,37 @@ async def on_message(message):
     await bot.process_commands(message)  # Permet au bot de traiter d'autres commandes
 
 
+@bot.command(name="help")
+async def help_command(ctx):
+    author = ctx.author
+    author_permissions = ctx.author.guild_permissions
+
+    # Vérifiez les autorisations de l'utilisateur
+    is_admin = author_permissions.administrator
+    can_manage_messages = author_permissions.manage_messages
+
+    # Créez un message d'aide en fonction des autorisations de l'utilisateur
+    help_message = f"Commandes disponibles pour {author.mention}:\n"
+
+    # Commande générale
+    help_message += "!stats - Affiche des informations sur le serveur\n"
+    help_message += "!liste_mots_interdits - Affiche la liste des mots interdits\n"
+
+    # Commande réservée aux administrateurs
+    if is_admin:
+        help_message += "!ajouter_mot_interdit [mots] - Ajoute des mots à la liste des mots interdits\n"
+        help_message += "!supprimer_mot_interdit [mots] - Supprime des mots de la liste des mots interdits\n"
+        help_message += (
+            "!bannisement_membre [utilisateur] [raison] - Bannit un membre du serveur\n"
+        )
+
+    # Commande réservée à ceux qui peuvent gérer les messages
+    if can_manage_messages:
+        help_message += "!clear [nombre] - Supprime un nombre spécifié de messages\n"
+
+    await ctx.send(help_message)
+
+
 @bot.command(name="stats")
 async def server_info(ctx):
     server = ctx.guild
