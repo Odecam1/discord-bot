@@ -44,8 +44,8 @@ async def on_message(message):
 
 commands_list = [
     server_info,
-    add_banned_word,
-    remove_banned_word,
+    add_banned_words,
+    remove_banned_words,
     list_banned_words,
     clear,
     create_poll,
