@@ -61,7 +61,7 @@ async def on_message(message):
     await bot.process_commands(message)  # Permet au bot de traiter d'autres commandes
 
 
-@bot.command(name="help")
+@bot.command(name="aide")
 async def help_command(ctx):
     author = ctx.author
     author_permissions = ctx.author.guild_permissions
