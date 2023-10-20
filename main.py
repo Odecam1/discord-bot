@@ -66,7 +66,7 @@ async def server_info(ctx):
     total_members = len(server.members)
     total_bots = sum(1 for member in server.members if member.bot)
     online_members = sum(
-        member.status == discord.Status.online for member in server.members
+        member.status != discord.Status.offline for member in server.members
     )
     total_channels = len(
         [
@@ -137,7 +137,7 @@ async def remove_banned_word(ctx, word):
 
 
 @bot.command(name="bannisement_membre")
-async def ban_user(ctx, user: discord.Member, *, reason="Aucune raison spécifiée"):
+async def ban_user(ctx, user, *, reason="Aucune raison spécifiée"):
     if ctx.author.guild_permissions.administrator:
         await user.ban(reason=reason)
         await ctx.send(f"{user.mention} a été banni pour la raison suivante : {reason}")
