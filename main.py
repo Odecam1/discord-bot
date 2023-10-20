@@ -39,7 +39,6 @@ async def on_message(message):
         return
 
     await check_banned_word(message)
-
     await bot.process_commands(message)  # Permet au bot de traiter d'autres commandes
 
 

@@ -1,75 +1,64 @@
 from discord.ext import commands
-from util.json_ban_word import save_banned_words, banned_words
+from util.json_ban_word import save_banned_words, load_banned_words
+
+banned_words = load_banned_words()
+
+
+# Fonction pour ajouter ou supprimer un mot de la liste de mots interdits
+async def update_banned_words(ctx, action, *words):
+    if ctx.author.guild_permissions.administrator:
+        words_changed = []
+        words_not_in_list = []
+        response = ""
+
+        for word in words:
+            if action == "ajouter" and word not in banned_words:
+                banned_words.append(word)
+                words_changed.append(word)
+            elif action == "supprimer" and word in banned_words:
+                banned_words.remove(word)
+                words_changed.append(word)
+            else:
+                words_not_in_list.append(word)
+
+        if words_changed:
+            save_banned_words(banned_words)
+            response = f"Mots {action}és de la liste des mots interdits : {', '.join(words_changed)}"
+
+        non_in_list_word = (
+            "déjà" if action == "ajouter" else "non"
+        )  # Changer "non" en fonction de l'action
+
+        if words_not_in_list:
+            response += f"\nMots {non_in_list_word} présents dans la liste des mots interdits : {', '.join(words_not_in_list)}"
+
+        if response:
+            await ctx.send(response)
+        else:
+            await ctx.send(f"Aucun mot n'a été spécifié pour {action}.")
+
+    else:
+        await ctx.send(
+            f"Vous n'avez pas les autorisations nécessaires pour {action} un mot interdit."
+        )
 
 
 # Commande pour ajouter des mots à la liste de mots interdits (réservée aux modérateurs)
 @commands.command(name="ajouter_mot_interdit")
 async def add_banned_word(ctx, *words):
-    if ctx.author.guild_permissions.administrator:
-        words_added = []
+    await update_banned_words(ctx, "ajouter", *words)
 
-        if words:
-            for word in words:
-                if not word in banned_words:
-                    banned_words.append(word)
-                    words_added.append(word)
-        else:
-            response = "Aucun mot n'a été spécifié pour ajout."
 
-        if words_added:
-            save_banned_words(banned_words)
-            response = (
-                f"Mots ajoutés à la liste des mots interdits : {', '.join(words_added)}"
-            )
-        else:
-            response = "Aucun mot n'a été ajouter car ils sont tous dans la liste"
-
-        if response:
-            await ctx.send(response)
-
-    else:
-        await ctx.send(
-            "Vous n'avez pas les autorisations nécessaires pour ajouter un mot interdit."
-        )
+# Commande pour supprimer un mot de la liste de mots interdits (réservée aux modérateurs)
+@commands.command(name="supprimer_mot_interdit")
+async def remove_banned_word(ctx, *words):
+    await update_banned_words(ctx, "supprimer", *words)
 
 
 # Commande pour afficher la liste de mots interdits
 @commands.command(name="liste_mots_interdits")
 async def list_banned_words(ctx):
     await ctx.send("Liste des mots interdits : " + ", ".join(banned_words))
-
-
-# Commande pour supprimer un mot de la liste de mots interdits (réservée aux modérateurs)
-@commands.command(name="supprimer_mot_interdit")
-async def remove_banned_word(ctx, *words):
-    if ctx.author.guild_permissions.administrator:
-        words_removed = []
-        words_not_in_list = []
-        response = ""
-
-        for word in words:
-            if word in banned_words:
-                banned_words.remove(word)
-                words_removed.append(word)
-            else:
-                words_not_in_list.append(word)
-
-        if words_removed:
-            save_banned_words(banned_words)
-            response = f"Mots supprimés de la liste des mots interdits : {', '.join(words_removed)}"
-
-        if words_not_in_list:
-            response += f"\nMots non présents dans la liste des mots interdits : {', '.join(words_not_in_list)}"
-
-        if response:
-            await ctx.send(response)
-        else:
-            await ctx.send("Aucun mot n'a été spécifié pour suppression.")
-
-    else:
-        await ctx.send(
-            "Vous n'avez pas les autorisations nécessaires pour supprimer un mot interdit."
-        )
 
 
 async def check_banned_word(message):
