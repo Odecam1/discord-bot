@@ -1,5 +1,5 @@
 from discord.ext import commands
-from json_ban_word import save_banned_words, banned_words
+from util.json_ban_word import save_banned_words, banned_words
 
 
 # Commande pour ajouter des mots à la liste de mots interdits (réservée aux modérateurs)

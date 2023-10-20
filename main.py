@@ -9,6 +9,7 @@ from util.banned_words import (
 )
 from util.clean import clear
 from util.poll import create_poll
+from util.ban_members import ban_user
 
 channel_id_member_join = 1164540231484198952
 token = "MTE2NDUyNjI1MTAzODQ3NDMxMA.GqT52w.LBoVE9d-Uu4uzwJfH3HfvVq5zyTxX09B7Sv1EI"
@@ -57,17 +58,7 @@ bot.add_command(remove_banned_word)
 bot.add_command(list_banned_words)
 bot.add_command(clear)
 bot.add_command(create_poll)
-
-
-@bot.command(name="bannisement_membre")
-async def ban_user(ctx, user: discord.user, *, reason="Aucune raison spécifiée"):
-    if ctx.author.guild_permissions.administrator:
-        await user.ban(reason=reason)
-        await ctx.send(f"{user.mention} a été banni pour la raison suivante : {reason}")
-    else:
-        await ctx.send(
-            "Vous n'avez pas les autorisations nécessaires pour bannir un utilisateur."
-        )
+bot.add_command(ban_user)
 
 
 bot.run(token)
