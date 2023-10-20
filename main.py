@@ -100,11 +100,14 @@ async def create_poll(ctx, question, *options):
 
 # Commande pour ajouter des mots à la liste de mots interdits (réservée aux modérateurs)
 @bot.command(name="ajouter_mot_interdit")
-async def add_banned_word(ctx, word):
+async def add_banned_word(ctx, *words):
     if ctx.author.guild_permissions.administrator:
-        banned_words.append(word)
-        save_banned_words(banned_words)  # Sauvegarder la liste après modification
-        await ctx.send(f"Le mot '{word}' a été ajouté à la liste des mots interdits.")
+        for word in words:
+            banned_words.append(word)
+            save_banned_words(banned_words)  # Sauvegarder la liste après modification
+            await ctx.send(
+                f"Le mot '{word}' a été ajouté à la liste des mots interdits."
+            )
     else:
         await ctx.send(
             "Vous n'avez pas les autorisations nécessaires pour ajouter un mot interdit."
@@ -119,18 +122,19 @@ async def list_banned_words(ctx):
 
 # Commande pour supprimer un mot de la liste de mots interdits (réservée aux modérateurs)
 @bot.command(name="supprimer_mot_interdit")
-async def remove_banned_word(ctx, word):
+async def remove_banned_word(ctx, *words):
     if ctx.author.guild_permissions.administrator:
-        if word in banned_words:
-            banned_words.remove(word)
-            save_banned_words(banned_words)
-            await ctx.send(
-                f"Le mot '{word}' a été supprimé de la liste des mots interdits."
-            )
-        else:
-            await ctx.send(
-                f"Le mot '{word}' n'est pas dans la liste des mots interdits."
-            )
+        for word in words:
+            if word in banned_words:
+                banned_words.remove(word)
+                save_banned_words(banned_words)
+                await ctx.send(
+                    f"Le mot '{word}' a été supprimé de la liste des mots interdits."
+                )
+            else:
+                await ctx.send(
+                    f"Le mot '{word}' n'est pas dans la liste des mots interdits."
+                )
     else:
         await ctx.send(
             "Vous n'avez pas les autorisations nécessaires pour supprimer un mot interdit."
