@@ -152,4 +152,40 @@ async def ban_user(ctx, user: discord.user, *, reason="Aucune raison spécifiée
         )
 
 
+@bot.command()
+async def clear(ctx, amount: int):
+    # Vérifie si l'auteur de la commande est un modérateur
+    if ctx.author.guild_permissions.manage_messages:
+        if amount <= 0:
+            await ctx.send(
+                "Le nombre de messages à supprimer doit être supérieur à zéro."
+            )
+            return
+
+        if amount >= 1000:
+            await ctx.send(
+                "Vous ne pouvez pas supprimer plus de 1000 messages à la fois."
+            )
+            return
+
+        async with ctx.typing():
+            # Récupère tous les messages dans le canal
+            all_messages = []
+            async for message in ctx.channel.history(limit=None):
+                all_messages.append(message)
+
+            if len(all_messages) <= amount:
+                await ctx.channel.purge(limit=len(all_messages))
+            else:
+                await ctx.channel.purge(
+                    limit=amount + 1
+                )  # Le +1 inclut le message de commande lui-même
+
+        await ctx.send(f"{amount} messages ont été supprimés.")
+    else:
+        await ctx.send(
+            "Vous n'avez pas les autorisations nécessaires pour utiliser cette commande."
+        )
+
+
 bot.run(token)
