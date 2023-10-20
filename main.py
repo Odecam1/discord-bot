@@ -1,4 +1,3 @@
-from tabnanny import check
 import discord
 from discord.ext import commands
 from util.stats import server_info
@@ -39,7 +38,7 @@ async def on_message(message):
     if message.author == bot.user:  # Évitez de réagir à vos propres messages
         return
 
-    check_banned_word(message)
+    await check_banned_word(message)
 
     await bot.process_commands(message)  # Permet au bot de traiter d'autres commandes
 

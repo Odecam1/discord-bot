@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 
 
-@commands.command(name="bannisement_membre")
+@commands.command(name="bannissement_membre")
 async def ban_user(ctx, user: discord.user, *, reason="Aucune raison spécifiée"):
     if ctx.author.guild_permissions.administrator:
         await user.ban(reason=reason)
