@@ -1,3 +1,4 @@
+from tabnanny import check
 import discord
 from discord.ext import commands
 from util.stats import server_info
@@ -5,7 +6,7 @@ from util.banned_words import (
     add_banned_word,
     list_banned_words,
     remove_banned_word,
-    banned_words,
+    check_banned_word,
 )
 from util.clean import clear
 from util.poll import create_poll
@@ -38,17 +39,7 @@ async def on_message(message):
     if message.author == bot.user:  # Évitez de réagir à vos propres messages
         return
 
-    message_content = (
-        message.content.lower()
-    )  # Convertir le message en minuscules pour la correspondance insensible à la casse
-
-    for banned_word in banned_words:
-        if banned_word in message_content:
-            await message.delete()  # Supprimer le message s'il contient un mot interdit
-            await message.channel.send(
-                f"{message.author.mention}, veuillez éviter d'utiliser des mots interdits."
-            )
-            break
+    check_banned_word(message)
 
     await bot.process_commands(message)  # Permet au bot de traiter d'autres commandes
 
