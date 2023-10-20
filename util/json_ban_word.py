@@ -14,3 +14,6 @@ def load_banned_words():
     except FileNotFoundError:
         save_banned_words([])
         return []
+
+
+banned_words = load_banned_words()

@@ -1,8 +1,12 @@
 import discord
 from discord.ext import commands
-from util.json_ban_word import load_banned_words, save_banned_words
 from util.stats import server_info
-from util.banned_words import add_banned_word, list_banned_words, remove_banned_word
+from util.banned_words import (
+    add_banned_word,
+    list_banned_words,
+    remove_banned_word,
+    banned_words,
+)
 from util.clean import clear
 from util.poll import create_poll
 
@@ -14,9 +18,6 @@ intents.members = True
 intents.message_content = True
 intents.presences = True
 bot = commands.Bot(command_prefix="!", intents=intents)
-
-
-banned_words = load_banned_words()
 
 
 @bot.event

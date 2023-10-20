@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 
 
-@commands.Bot.command(name="sondage")
+@commands.command(name="sondage")
 async def create_poll(ctx, question, *options):
     poll_embed = discord.Embed(title=question)
     for option in options:

@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 
 
-@commands.Bot.command(name="stats")
+@commands.command(name="stats")
 async def server_info(ctx):
     server = ctx.guild
     total_members = len(server.members)

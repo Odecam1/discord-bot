@@ -1,7 +1,7 @@
 from discord.ext import commands
 
 
-@commands.Bot.command()
+@commands.command()
 async def clear(ctx, arg):
     if ctx.author.guild_permissions.manage_messages:
         if arg == "*":

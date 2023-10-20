@@ -1,9 +1,9 @@
-from json_ban_word import save_banned_words
 from discord.ext import commands
+from json_ban_word import save_banned_words, banned_words
 
 
 # Commande pour ajouter des mots à la liste de mots interdits (réservée aux modérateurs)
-@commands.Bot.command(name="ajouter_mot_interdit")
+@commands.command(name="ajouter_mot_interdit")
 async def add_banned_word(ctx, *words):
     if ctx.author.guild_permissions.administrator:
         words_added = []
@@ -32,13 +32,13 @@ async def add_banned_word(ctx, *words):
 
 
 # Commande pour afficher la liste de mots interdits
-@commands.Bot.command(name="liste_mots_interdits")
+@commands.command(name="liste_mots_interdits")
 async def list_banned_words(ctx):
     await ctx.send("Liste des mots interdits : " + ", ".join(banned_words))
 
 
 # Commande pour supprimer un mot de la liste de mots interdits (réservée aux modérateurs)
-@commands.Bot.command(name="supprimer_mot_interdit")
+@commands.command(name="supprimer_mot_interdit")
 async def remove_banned_word(ctx, *words):
     if ctx.author.guild_permissions.administrator:
         words_removed = []
