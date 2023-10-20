@@ -2,9 +2,9 @@ import discord
 from discord.ext import commands
 from util.stats import server_info
 from util.banned_words import (
-    add_banned_word,
+    add_banned_words,
     list_banned_words,
-    remove_banned_word,
+    remove_banned_words,
     check_banned_word,
 )
 from util.clean import clear

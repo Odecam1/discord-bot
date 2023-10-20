@@ -50,14 +50,14 @@ async def update_banned_words(ctx, action, *words):
 
 
 # Commande pour ajouter des mots à la liste de mots interdits (réservée aux modérateurs)
-@commands.command(name="ajouter_mot_interdit")
-async def add_banned_word(ctx, *words):
+@commands.command(name="ajouter_mots_interdit")
+async def add_banned_words(ctx, *words):
     await update_banned_words(ctx, "ajouter", *words)
 
 
 # Commande pour supprimer un mot de la liste de mots interdits (réservée aux modérateurs)
-@commands.command(name="supprimer_mot_interdit")
-async def remove_banned_word(ctx, *words):
+@commands.command(name="supprimer_mots_interdit")
+async def remove_banned_words(ctx, *words):
     await update_banned_words(ctx, "supprimer", *words)
 
 
