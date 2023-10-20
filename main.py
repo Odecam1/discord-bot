@@ -5,6 +5,12 @@ import json
 channel_id = 1164540231484198952
 token = "MTE2NDUyNjI1MTAzODQ3NDMxMA.GqT52w.LBoVE9d-Uu4uzwJfH3HfvVq5zyTxX09B7Sv1EI"
 
+intents = discord.Intents.default()
+intents.members = True
+intents.message_content = True
+intents.presences = True
+bot = commands.Bot(command_prefix="!", intents=intents)
+
 
 def save_banned_words(banned_words):
     with open("banned_words.json", "w") as json_file:
@@ -22,12 +28,6 @@ def load_banned_words():
 
 
 banned_words = load_banned_words()
-
-intents = discord.Intents.default()
-intents.members = True
-intents.message_content = True
-intents.presences = True
-bot = commands.Bot(command_prefix="!", intents=intents)
 
 
 @bot.event
