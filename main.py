@@ -102,12 +102,25 @@ async def create_poll(ctx, question, *options):
 @bot.command(name="ajouter_mot_interdit")
 async def add_banned_word(ctx, *words):
     if ctx.author.guild_permissions.administrator:
+        words_added = []
+
         for word in words:
-            banned_words.append(word)
-            save_banned_words(banned_words)  # Sauvegarder la liste après modification
-            await ctx.send(
-                f"Le mot '{word}' a été ajouté à la liste des mots interdits."
+            if word not in banned_words:
+                banned_words.append(word)
+                words_added.append(word)
+
+        if words_added:
+            save_banned_words(banned_words)
+            added_msg = (
+                f"Mots ajoutés à la liste des mots interdits : {', '.join(words_added)}"
             )
+
+        response = (
+            added_msg if words_added else "Aucun mot n'a été spécifié pour ajout."
+        )
+
+        if response:
+            await ctx.send(response)
     else:
         await ctx.send(
             "Vous n'avez pas les autorisations nécessaires pour ajouter un mot interdit."
@@ -124,17 +137,29 @@ async def list_banned_words(ctx):
 @bot.command(name="supprimer_mot_interdit")
 async def remove_banned_word(ctx, *words):
     if ctx.author.guild_permissions.administrator:
+        words_removed = []
+        words_not_in_list = []
+
         for word in words:
             if word in banned_words:
                 banned_words.remove(word)
-                save_banned_words(banned_words)
-                await ctx.send(
-                    f"Le mot '{word}' a été supprimé de la liste des mots interdits."
-                )
+                words_removed.append(word)
             else:
-                await ctx.send(
-                    f"Le mot '{word}' n'est pas dans la liste des mots interdits."
-                )
+                words_not_in_list.append(word)
+
+        if words_removed:
+            save_banned_words(banned_words)
+            removed_msg = f"Mots supprimés de la liste des mots interdits : {', '.join(words_removed)}"
+
+        if words_not_in_list:
+            not_in_list_msg = f"Mots non présents dans la liste des mots interdits : {', '.join(words_not_in_list)}"
+
+        response = "\n".join(filter(None, [removed_msg, not_in_list_msg]))
+
+        if response:
+            await ctx.send(response)
+        else:
+            await ctx.send("Aucun mot n'a été spécifié pour suppression.")
     else:
         await ctx.send(
             "Vous n'avez pas les autorisations nécessaires pour supprimer un mot interdit."
@@ -153,35 +178,25 @@ async def ban_user(ctx, user: discord.user, *, reason="Aucune raison spécifiée
 
 
 @bot.command()
-async def clear(ctx, amount: int):
-    # Vérifie si l'auteur de la commande est un modérateur
+async def clear(ctx, arg):
     if ctx.author.guild_permissions.manage_messages:
-        if amount <= 0:
-            await ctx.send(
-                "Le nombre de messages à supprimer doit être supérieur à zéro."
-            )
-            return
-
-        if amount >= 1000:
-            await ctx.send(
-                "Vous ne pouvez pas supprimer plus de 1000 messages à la fois."
-            )
-            return
-
-        async with ctx.typing():
-            # Récupère tous les messages dans le canal
-            all_messages = []
-            async for message in ctx.channel.history(limit=None):
-                all_messages.append(message)
-
-            if len(all_messages) <= amount:
-                await ctx.channel.purge(limit=len(all_messages))
-            else:
-                await ctx.channel.purge(
-                    limit=amount + 1
-                )  # Le +1 inclut le message de commande lui-même
-
-        await ctx.send(f"{amount} messages ont été supprimés.")
+        if arg == "*":
+            await ctx.channel.purge()
+        else:
+            try:
+                amount = int(arg)
+                if amount <= 0:
+                    await ctx.send(
+                        "Le nombre de messages à supprimer doit être supérieur à zéro."
+                    )
+                else:
+                    await ctx.channel.purge(
+                        limit=amount + 1
+                    )  # Le +1 inclut le message de commande lui-même
+            except ValueError:
+                await ctx.send(
+                    "L'argument doit être un nombre ou '*' pour supprimer tous les messages."
+                )
     else:
         await ctx.send(
             "Vous n'avez pas les autorisations nécessaires pour utiliser cette commande."
