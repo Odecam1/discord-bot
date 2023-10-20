@@ -4,6 +4,10 @@ from util.json_ban_word import save_banned_words, load_banned_words
 banned_words = load_banned_words()
 
 
+def join_list(list_str):
+    return ", ".join(list_str)
+
+
 # Fonction pour ajouter ou supprimer un mot de la liste de mots interdits
 async def update_banned_words(ctx, action, *words):
     if ctx.author.guild_permissions.administrator:
@@ -25,14 +29,14 @@ async def update_banned_words(ctx, action, *words):
 
         if words_changed:
             save_banned_words(banned_words)
-            response = f"Mots {action[:-2]}és de la liste des mots interdits : {", ".join(words_changed)}"
+            response = f"Mots {action[:-2]}és de la liste des mots interdits : {join_list(words_changed)}"
 
         if words_not_changed:
             adverb = (
                 "déjà" if action == "ajouter" else "non"
             )  # Changer "non" en fonction de l'action
 
-            response += f"\nMots {adverb} présents dans la liste des mots interdits : {", ".join(words_not_changed)}"
+            response += f"\nMots {adverb} présents dans la liste des mots interdits : {join_list(words_not_changed)}"
 
         if response:
             await ctx.send(response)
@@ -60,7 +64,7 @@ async def remove_banned_word(ctx, *words):
 # Commande pour afficher la liste de mots interdits
 @commands.command(name="liste_mots_interdits")
 async def list_banned_words(ctx):
-    await ctx.send("Liste des mots interdits : " + ", ".join(banned_words))
+    await ctx.send("Liste des mots interdits : " + join_list(banned_words))
 
 
 async def check_banned_word(message):
