@@ -26,6 +26,7 @@ banned_words = load_banned_words()
 intents = discord.Intents.default()
 intents.members = True
 intents.message_content = True
+intents.presences = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 
@@ -65,11 +66,9 @@ async def server_info(ctx):
     server = ctx.guild
     total_members = len(server.members)
     total_bots = sum(1 for member in server.members if member.bot)
-    online_members = 0
-
-    for member in server.members:
-        if member.status == discord.Status.offline:
-            online_members += 1
+    online_members = sum(
+        member.status != discord.Status.offline for member in server.members
+    )
 
     total_channels = len(
         [
