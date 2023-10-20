@@ -42,13 +42,18 @@ async def on_message(message):
     await bot.process_commands(message)  # Permet au bot de traiter d'autres commandes
 
 
-bot.add_command(server_info)
-bot.add_command(add_banned_word)
-bot.add_command(remove_banned_word)
-bot.add_command(list_banned_words)
-bot.add_command(clear)
-bot.add_command(create_poll)
-bot.add_command(ban_user)
+commands_list = [
+    server_info,
+    add_banned_word,
+    remove_banned_word,
+    list_banned_words,
+    clear,
+    create_poll,
+    ban_user,
+]
+
+for command in commands_list:
+    bot.add_command(command)
 
 
 bot.run(token)
