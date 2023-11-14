@@ -10,43 +10,43 @@ def join_list(list_str):
 
 # Fonction pour ajouter ou supprimer un mot de la liste de mots interdits
 async def update_banned_words(ctx, action, *words):
-    if ctx.author.guild_permissions.administrator:
-        words_changed = []
-        words_not_changed = []
-        response = ""
-
-        for word in words:
-            is_banned_word = word in banned_words
-
-            if action == "ajouter" and not is_banned_word:
-                banned_words.append(word)
-            elif action == "supprimer" and is_banned_word:
-                banned_words.remove(word)
-            else:
-                words_not_changed.append(word)
-                continue
-            words_changed.append(word)
-
-        if words_changed:
-            save_banned_words(banned_words)
-            response = f"Mots {action[:-2]}és de la liste des mots interdits : {join_list(words_changed)}"
-
-        if words_not_changed:
-            adverb = (
-                "déjà" if action == "ajouter" else "non"
-            )  # Changer "non" en fonction de l'action
-
-            response += f"\nMots {adverb} présents dans la liste des mots interdits : {join_list(words_not_changed)}"
-
-        if response:
-            await ctx.send(response)
-        else:
-            await ctx.send(f"Aucun mot n'a été spécifié pour {action}.")
-
-    else:
+    if not ctx.author.guild_permissions.administrator:
         await ctx.send(
             f"Vous n'avez pas les autorisations nécessaires pour {action} un mot interdit."
         )
+        return
+
+    words_changed = []
+    words_not_changed = []
+    response = ""
+    is_add = action == "ajouter"
+
+    for word in words:
+        is_banned_word = word in banned_words
+
+        if is_add and not is_banned_word:
+            banned_words.append(word)
+        elif action == "supprimer" and is_banned_word:
+            banned_words.remove(word)
+        else:
+            words_not_changed.append(word)
+            continue
+        words_changed.append(word)
+
+    if words_changed:
+        save_banned_words(banned_words)
+        action_word = "à" if is_add else "de"
+        response = f"Mots {action[:-2]}és {action_word} la liste des mots interdits : {join_list(words_changed)}"
+
+    if words_not_changed:
+        adverb = "déjà" if is_add else "non"  # Changer "non" en fonction de l'action
+
+        response += f"\nMots {adverb} présents dans la liste des mots interdits : {join_list(words_not_changed)}"
+
+    if response:
+        await ctx.send(response)
+    else:
+        await ctx.send(f"Aucun mot n'a été spécifié pour {action}.")
 
 
 # Commande pour ajouter des mots à la liste de mots interdits (réservée aux modérateurs)
