@@ -2,7 +2,7 @@ from discord.ext import commands
 
 
 @commands.command()
-async def clear(ctx, arg):
+async def clear(ctx: commands.Context, arg: str) -> None:
     if ctx.author.guild_permissions.manage_messages:
         if arg == "*":
             await ctx.channel.purge()

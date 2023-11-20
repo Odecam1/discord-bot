@@ -1,10 +1,11 @@
-import discord
+from discord import Embed
 from discord.ext import commands
+from typing import Tuple
 
 
 @commands.command(name="sondage")
-async def create_poll(ctx, question, *options):
-    poll_embed = discord.Embed(title=question)
+async def create_poll(ctx: commands.Context, question: str, *options: str) -> None:
+    poll_embed: Embed = Embed(title=question)
     for option in options:
         poll_embed.add_field(name=option, value="0", inline=False)
 
