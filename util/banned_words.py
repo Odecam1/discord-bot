@@ -1,3 +1,4 @@
+from discord import Message
 from discord.ext import commands
 from util.json_ban_word import save_banned_words, load_banned_words
 from typing import List
@@ -63,7 +64,7 @@ async def list_banned_words(ctx: commands.Context) -> None:
     await ctx.send("Liste des mots interdits : " + join_list(banned_words))
 
 
-async def check_banned_word(message) -> None:
+async def check_banned_word(message: Message) -> None:
     message_content: str = message.content.lower()
 
     for banned_word in banned_words:
